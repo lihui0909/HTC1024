@@ -1,5 +1,3 @@
-package src;
-
 //第四题：前缀和+暴力 时间复杂度O(n^3)
 public class Forth {
     public static void main(String[] args) {

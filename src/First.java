@@ -1,4 +1,4 @@
-package src;//第一题: 时间复杂度O(n) 空间复杂度O(n)
+//第一题: 时间复杂度O(n) 空间复杂度O(n)
 import java.util.*;
 public class First {
     public static void main(String[] args) {

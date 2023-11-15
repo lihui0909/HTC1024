@@ -1,5 +1,3 @@
-package src;
-
 //第四题：前缀和+二分查找 时间复杂度O(n^2*logn)
 public class Forth1 {
     public static void main(String[] args) {

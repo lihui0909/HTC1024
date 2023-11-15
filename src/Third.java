@@ -1,4 +1,4 @@
-package src;//第三题：时间复杂度 O(n)
+//第三题：时间复杂度 O(n)
 import java.util.*;
 
 public class Third {
