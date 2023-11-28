@@ -8,7 +8,7 @@ public class Fifth {
     static String[] dirs = {"N", "S", "E", "W"};
 
     public static void main(String[] args) {
-        System.out.println(gridTravel(-2, -4));
+        System.out.println(gridTravel(-3, 2));
     }
 
     public static String gridTravel(int x, int y) {
