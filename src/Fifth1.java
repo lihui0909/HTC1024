@@ -1,39 +1,86 @@
-///*
-// 第五题 第二种解法：记忆化搜索
-// 第一种解法没办法记录中间值，是因为总步数不确定，
-// 所以这种解法先计算出了总步数，以便于构造中间值数组
-// */
-//import java.util.*;
-//public class Fifth1 {
-//    public static void main(String[] args) {
-//        System.out.println(gridTravel(-2,1));
-//    }
-//    char[] pops = new char[]{'E','W','S','N'};
-//    List<String> path = new ArrayList<>();
-//    public static String gridTravel(int x, int y) {
-//        // 如果x+y的值为偶数，没有合适的走法。因为1,2,4...2^n这个步长是等比数列，和一定为奇数
-//        if((x+y)%2 == 0){
-//            return "";
-//        }
-//        // 计算步数n，计算公式为 n = log2(|x|+|y|+1)
-//        double n = Math.log(Math.abs(x) + Math.abs(y) + 1)/Math.log(2);
-//        dfs()
-//
-//    }
-//
-//    /**
-//     * dfs 递归方法
-//     * @param i 本次是第几步
-//     * @param x 终点x坐标
-//     * @param y 终点y坐标
-//     * @param curX 当前点x坐标
-//     * @param curY 当前点y坐标
-//     */
-//    public static boolean dfs(int i, int x, int y, int curX, int curY, int n){
-//        if(i == n){
-//            return (curX == x && curY == y)? true : false;
-//        }
-//
-//
-//    }
-//}
+import java.util.*;
+public class Fifth1 {
+    public class Point{
+        int x;
+        int y;
+        public Point(int x,int y){
+            this.x = x;
+            this.y = y;
+        }
+    }
+    public class PointPath{
+        int x;
+        int y;
+        String p;
+        public PointPath(int x,int y,String path){
+            this.x = x;
+            this.y = y;
+            this.p = path;
+        }
+    }
+    Map<Point, String> visited = new HashMap<>();
+    int[][] ops = new int[][]{{-1,0},{1,0},{0,-1},{0,1}};
+    char[] forward = {'W','E','S','N'};
+    char[] backward = {'E','W','N','S'};
+    //static Queue<PointPath> fq,bq;
+    public String findMinPath(int x, int y) {
+        if((x+y)%2==0) return "";
+        Queue<PointPath> fq = new LinkedList<>(),bq = new LinkedList<>();
+        int btotal, ftotal, n = (int)(Math.log(Math.abs(x) + Math.abs(y) + 1)/Math.log(2));
+        btotal = ftotal = n/2 -1;
+        if(n%2 == 1){
+            btotal++;
+        }
+
+        fq.add(new PointPath(0,0,""));
+        bq.add(new PointPath(x,y,""));
+
+        for(int i = 0; i < ftotal;i++){
+            for(int m=fq.size();m > 0;m--){
+                PointPath point1, point2;
+                point1 = fq.poll();
+                point2 = bq.poll();
+                int flen = 1<<i, blen = 1<<(n-i-1);
+                for(int j = 0; j < 4;j++){
+                    PointPath p1 = new PointPath(point1.x+ops[j][0]*flen, point1.y+ops[j][1]*flen,point1.p+forward[j]);
+                    PointPath p2 = new PointPath(point2.x+ops[j][0]*blen,point2.y+ops[j][1]*blen,point2.p+backward[j]);
+                    fq.add(p1);
+                    bq.add(p2);
+                }
+            }
+
+            if(btotal > ftotal){
+                for(int m = bq.size();m>0;m--){
+                    PointPath point2 = bq.poll();
+                    int blen=1<<(n-ftotal);
+                    for(int j=0;j<4;j--){
+                        PointPath p2 = new PointPath(point2.x+ops[j][0]*blen,point2.y+ops[j][1]*blen,point2.p+backward[j]);
+                        bq.add(p2);
+                    }
+                }
+            }
+
+            for(int m=bq.size();m>0;m--){
+                PointPath point2 = bq.poll();
+                Point point = new Point(point2.x, point2.y);
+                visited.put(point, point2.p);
+            }
+
+            for(int m = fq.size();m>0;m--){
+                PointPath point1 = fq.poll();
+                int flen = 1<<ftotal;
+                for(int j=0;j < 4;j++){
+                    Point p1 = new Point(point1.x+ops[j][0]*flen,point1.y+ops[j][1]*flen);
+                    String path1 = point1.p + forward[j];
+                    if(visited.containsKey(p1)){
+                        String path2 = visited.get(p1);
+                        //reverse path2
+                        return path1 + path2;
+                    }
+                }
+            }
+
+        }
+        return "";
+    }
+}
