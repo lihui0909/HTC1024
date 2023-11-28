@@ -8,6 +8,7 @@ public class Fifth1 {
         System.out.println(gridTravel(-2, 1));
     }
 
+    //创建类记录点的信息，包括xy坐标、步数level、路径字符串
     static class Point {
         int x;
         int y;
